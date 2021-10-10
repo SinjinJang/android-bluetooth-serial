@@ -3,9 +3,6 @@ package com.harrysoft.androidbluetoothserial.demoapp;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -16,10 +13,6 @@ import com.harrysoft.androidbluetoothserial.demoapp.databinding.ActivityCommunic
 public class CommunicateActivity extends AppCompatActivity {
 
     private ActivityCommunicateBinding mBinding;
-
-    private TextView connectionText, messagesView;
-    private EditText messageBox;
-    private Button sendButton, connectButton;
 
     private CommunicateViewModel viewModel;
 
@@ -46,13 +39,6 @@ public class CommunicateActivity extends AppCompatActivity {
             return;
         }
 
-        // Setup our Views
-        connectionText = findViewById(R.id.communicate_connection_text);
-        messagesView = findViewById(R.id.communicate_messages);
-        messageBox = findViewById(R.id.communicate_message);
-        sendButton = findViewById(R.id.communicate_send);
-        connectButton = findViewById(R.id.communicate_connect);
-
         // Start observing the data sent to us by the ViewModel
         viewModel.getConnectionStatus().observe(this, this::onConnectionStatus);
         viewModel.getDeviceName().observe(this, name -> setTitle(getString(R.string.device_name_format, name)));
@@ -60,17 +46,17 @@ public class CommunicateActivity extends AppCompatActivity {
             if (TextUtils.isEmpty(message)) {
                 message = getString(R.string.no_messages);
             }
-            messagesView.setText(message);
+            mBinding.communicateMessages.setText(message);
         });
         viewModel.getMessage().observe(this, message -> {
             // Only update the message if the ViewModel is trying to reset it
             if (TextUtils.isEmpty(message)) {
-                messageBox.setText(message);
+                mBinding.communicateMessage.setText(message);
             }
         });
 
         // Setup the send button click action
-        sendButton.setOnClickListener(v -> viewModel.sendMessage(messageBox.getText().toString()));
+        mBinding.communicateSend.setOnClickListener(v -> viewModel.sendMessage(mBinding.communicateMessage.getText().toString()));
 
         mBinding.btnPin13.setOnClickListener(v -> {
             mValuePin13 = !mValuePin13;
@@ -82,29 +68,30 @@ public class CommunicateActivity extends AppCompatActivity {
     private void onConnectionStatus(CommunicateViewModel.ConnectionStatus connectionStatus) {
         switch (connectionStatus) {
             case CONNECTED:
-                connectionText.setText(R.string.status_connected);
-                messageBox.setEnabled(true);
-                sendButton.setEnabled(true);
-                connectButton.setEnabled(true);
-                connectButton.setText(R.string.disconnect);
-                connectButton.setOnClickListener(v -> viewModel.disconnect());
+
+                mBinding.communicateConnectionText.setText(R.string.status_connected);
+                mBinding.communicateMessage.setEnabled(true);
+                mBinding.communicateSend.setEnabled(true);
+                mBinding.communicateConnect.setEnabled(true);
+                mBinding.communicateConnect.setText(R.string.disconnect);
+                mBinding.communicateConnect.setOnClickListener(v -> viewModel.disconnect());
                 break;
 
             case CONNECTING:
-                connectionText.setText(R.string.status_connecting);
-                messageBox.setEnabled(false);
-                sendButton.setEnabled(false);
-                connectButton.setEnabled(false);
-                connectButton.setText(R.string.connect);
+                mBinding.communicateConnectionText.setText(R.string.status_connecting);
+                mBinding.communicateMessage.setEnabled(false);
+                mBinding.communicateSend.setEnabled(false);
+                mBinding.communicateConnect.setEnabled(false);
+                mBinding.communicateConnect.setText(R.string.connect);
                 break;
 
             case DISCONNECTED:
-                connectionText.setText(R.string.status_disconnected);
-                messageBox.setEnabled(false);
-                sendButton.setEnabled(false);
-                connectButton.setEnabled(true);
-                connectButton.setText(R.string.connect);
-                connectButton.setOnClickListener(v -> viewModel.connect());
+                mBinding.communicateConnectionText.setText(R.string.status_disconnected);
+                mBinding.communicateMessage.setEnabled(false);
+                mBinding.communicateSend.setEnabled(false);
+                mBinding.communicateConnect.setEnabled(true);
+                mBinding.communicateConnect.setText(R.string.connect);
+                mBinding.communicateConnect.setOnClickListener(v -> viewModel.connect());
                 break;
         }
     }
