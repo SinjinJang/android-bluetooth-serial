@@ -8,9 +8,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.harrysoft.androidbluetoothserial.demoapp.databinding.ActivityCommunicateBinding;
+
 public class CommunicateActivity extends AppCompatActivity {
+
+    private ActivityCommunicateBinding mBinding;
 
     private TextView connectionText, messagesView;
     private EditText messageBox;
@@ -22,7 +27,8 @@ public class CommunicateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // Setup our activity
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_communicate);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_communicate);
+
         // Enable the back button in the action bar if possible
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
