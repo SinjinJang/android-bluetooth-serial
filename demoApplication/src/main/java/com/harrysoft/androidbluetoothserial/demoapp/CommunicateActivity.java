@@ -3,7 +3,6 @@ package com.harrysoft.androidbluetoothserial.demoapp;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -72,6 +71,11 @@ public class CommunicateActivity extends AppCompatActivity {
 
         // Setup the send button click action
         sendButton.setOnClickListener(v -> viewModel.sendMessage(messageBox.getText().toString()));
+
+        mBinding.btnPin13.setOnClickListener(v -> {
+            mValuePin13 = !mValuePin13;
+            viewModel.sendMessage("^13:" + (mValuePin13 ? "H" : "L")  + "$");
+        });
     }
 
     // Called when the ViewModel updates us of our connectivity status
@@ -125,10 +129,5 @@ public class CommunicateActivity extends AppCompatActivity {
     public void onBackPressed() {
         // Close the activity
         finish();
-    }
-
-    public void onClickPin13(View view) {
-        mValuePin13 = !mValuePin13;
-        viewModel.sendMessage("^13:" + (mValuePin13 ? "H" : "L")  + "$");
     }
 }
