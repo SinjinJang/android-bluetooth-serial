@@ -3,6 +3,7 @@ package com.harrysoft.androidbluetoothserial.demoapp;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,6 +23,9 @@ public class CommunicateActivity extends AppCompatActivity {
     private Button sendButton, connectButton;
 
     private CommunicateViewModel viewModel;
+
+    // PIN 13 ON/OFF 상태값 저장
+    private boolean mValuePin13 = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,5 +125,10 @@ public class CommunicateActivity extends AppCompatActivity {
     public void onBackPressed() {
         // Close the activity
         finish();
+    }
+
+    public void onClickPin13(View view) {
+        mValuePin13 = !mValuePin13;
+        viewModel.sendMessage("^13:" + (mValuePin13 ? "H" : "L")  + "$");
     }
 }
